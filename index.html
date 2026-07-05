@@ -176,11 +176,7 @@
 
   <section id="thanks-section" class="hidden">
     <h2>Köszi a tesztelést!</h2>
-    <p style="font-size:14px;line-height:1.6;">Ez a legfrissebb kép a csoport eddigi visszajelzéseiről:</p>
-    <div class="stat-row">
-      <div class="stat"><span class="num" id="stat-count">–</span><span class="lbl">visszajelzés</span></div>
-      <div class="stat"><span class="num" id="stat-avg">–</span><span class="lbl">átlagos hasznosság / 5</span></div>
-    </div>
+
     <div id="comments-list" style="margin-top:1.25rem;"></div>
   </section>
 
@@ -309,40 +305,6 @@ document.querySelectorAll(".star").forEach(btn => {
   });
 });
 
-async function loadStats(){
-  try {
-    const list = await window.storage.list("feedback:", true);
-    if (!list || !list.keys || list.keys.length === 0) {
-      document.getElementById("stat-count").textContent = "0";
-      document.getElementById("stat-avg").textContent = "–";
-      return;
-    }
-    let sum = 0, count = 0;
-    const comments = [];
-    for (const key of list.keys) {
-      try {
-        const entry = await window.storage.get(key, true);
-        if (entry && entry.value) {
-          const data = JSON.parse(entry.value);
-          if (typeof data.rating === "number") { sum += data.rating; count++; }
-          if (data.comment) comments.push(data.comment);
-        }
-      } catch(e) { /* skip broken entry */ }
-    }
-    document.getElementById("stat-count").textContent = count.toString();
-    document.getElementById("stat-avg").textContent = count > 0 ? (sum / count).toFixed(1) : "–";
-    const commentsList = document.getElementById("comments-list");
-    commentsList.innerHTML = "";
-    comments.slice(-5).reverse().forEach(c => {
-      const p = document.createElement("p");
-      p.style.cssText = "font-size:13.5px;line-height:1.6;padding:8px 0;border-bottom:1px solid var(--line);color:rgba(27,46,53,0.8);";
-      p.textContent = "\u201C" + c + "\u201D";
-      commentsList.appendChild(p);
-    });
-  } catch(e) {
-    console.error("Storage error:", e);
-  }
-}
 
 async function finishFeedback(){
   document.getElementById("feedback-section").classList.add("hidden");
