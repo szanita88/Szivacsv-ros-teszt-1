@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Szivacsváros diagnosztika</title>
+<style>
+  :root{
+    --ink:#1B2E35;
+    --paper:#EDEFE9;
+    --water:#2B6777;
+    --water-deep:#173B45;
+    --moss:#5C7A34;
+    --moss-light:#E4EAD8;
+    --clay:#9C5A32;
+    --clay-light:#EFE1D2;
+    --sand:#DED9C8;
+    --line: rgba(27,46,53,0.14);
+    --line-strong: rgba(27,46,53,0.28);
+    --display: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+    --body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --mono: SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--body);}
+  body{padding:0 0 4rem;}
+  .wrap{max-width:640px;margin:0 auto;padding:0 1.25rem;}
+
+  header.hero{padding:3rem 0 2rem;border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--water);margin:0 0 0.75rem;}
+  h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:34px;line-height:1.15;margin:0 0 0.75rem;color:var(--ink);}
+  .lede{font-size:16px;line-height:1.6;color:rgba(27,46,53,0.75);margin:0 0 2rem;max-width:52ch;}
+
+  svg.cross-section{width:100%;height:auto;display:block;}
+  .flow-drop{animation:flow 2.8s ease-in-out infinite;}
+  @media (prefers-reduced-motion: reduce){.flow-drop{animation:none;}}
+  @keyframes flow{
+    0%{ transform: translate(0,0); opacity:0; }
+    12%{ opacity:1; }
+    55%{ transform: translate(6px, 34px); opacity:1; }
+    75%{ transform: translate(6px, 34px); opacity:0; }
+    100%{ transform: translate(0,0); opacity:0; }
+  }
+
+  section{padding:2.25rem 0;border-bottom:1px solid var(--line);}
+  h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:20px;margin:0 0 1.25rem;}
+
+  label{display:block;font-size:13px;font-family:var(--mono);color:rgba(27,46,53,0.6);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;}
+  select{
+    width:100%;font-size:15px;font-family:var(--body);padding:10px 12px;
+    border:1px solid var(--line-strong);border-radius:4px;background:#fff;color:var(--ink);
+    margin-bottom:1.25rem;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231B2E35' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  select:focus{outline:2px solid var(--water);outline-offset:1px;}
+
+  button{
+    font-family:var(--body);font-size:15px;font-weight:600;padding:12px 22px;
+    background:var(--water-deep);color:#fff;border:none;border-radius:4px;cursor:pointer;
+  }
+  button:hover{background:var(--water);}
+  button:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-strong);}
+  button.ghost:hover{background:rgba(27,46,53,0.05);}
+
+  .card{
+    border-radius:6px;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:8px;
+    margin-bottom:10px;border:1px solid var(--line);
+  }
+  .card.moss{background:var(--moss-light);border-color:rgba(92,122,52,0.3);}
+  .card.water{background:#E4EEF0;border-color:rgba(43,103,119,0.3);}
+  .card.clay{background:var(--clay-light);border-color:rgba(156,90,50,0.3);}
+  .card .tag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;opacity:0.65;display:block;margin-bottom:2px;}
+  .card h3{font-size:15px;font-weight:600;margin:0 0 4px;}
+  .card p{font-size:13.5px;line-height:1.55;margin:0;color:rgba(27,46,53,0.8);}
+  .card .who{
+    margin-top:4px;padding-top:8px;border-top:1px solid rgba(27,46,53,0.15);
+    font-size:12.5px;line-height:1.5;
+  }
+  .card .who .who-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;opacity:0.6;display:block;margin-bottom:2px;}
+
+  .stars{display:flex;gap:6px;margin-bottom:1rem;}
+  .star{font-size:26px;cursor:pointer;color:var(--line-strong);background:none;border:none;padding:0;line-height:1;}
+  .star.active{color:var(--clay);}
+  textarea{
+    width:100%;min-height:80px;font-family:var(--body);font-size:14px;padding:10px 12px;
+    border:1px solid var(--line-strong);border-radius:4px;margin-bottom:1rem;resize:vertical;
+  }
+  textarea:focus{outline:2px solid var(--water);outline-offset:1px;}
+
+  .stat-row{display:flex;gap:1.5rem;margin-top:1rem;}
+  .stat{font-family:var(--mono);}
+  .stat .num{font-size:22px;font-weight:600;display:block;color:var(--water-deep);}
+  .stat .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:rgba(27,46,53,0.55);}
+
+  .note{font-size:12.5px;color:rgba(27,46,53,0.55);margin-top:0.75rem;line-height:1.6;}
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Budapest — csapadékvíz-teszt · v0.3</p>
+    <h1>Hova folyjon a víz, mielőtt elfolyna?</h1>
+    <p class="lede">Válaszolj pár kérdésre a saját utcádról vagy udvarodról. Megmutatjuk, melyik szivacsváros-megoldás illik oda — és azt is, kihez kell fordulnod, ha meg akarod valósítani. Ez egy korai teszt — a visszajelzésed formálja a végleges appot. Most már azt is figyelembe veszi, ha a zöldfelület magasabban van, mint a burkolat (ez a leggyakoribb hazai eset).</p>
+    <svg class="cross-section" viewBox="0 0 600 140" role="img" aria-label="Keresztmetszeti rajz: úttest, megszakított szegély, és a víz befolyása a zöldsávba">
+      <rect x="0" y="90" width="600" height="50" fill="#D8D3C2"/>
+      <rect x="0" y="80" width="330" height="12" fill="#BDB8A6"/>
+      <rect x="330" y="72" width="18" height="20" fill="#8C8779"/>
+      <rect x="366" y="72" width="234" height="20" fill="#8C8779"/>
+      <ellipse cx="470" cy="112" rx="140" ry="26" fill="#DCE6C4"/>
+      <path d="M420 108 q6 -18 0 -30" stroke="#5C7A34" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M448 110 q6 -22 -2 -36" stroke="#5C7A34" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M478 108 q-4 -16 4 -28" stroke="#5C7A34" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M508 110 q6 -20 0 -32" stroke="#5C7A34" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle class="flow-drop" cx="339" cy="70" r="5" fill="#2B6777"/>
+      <circle class="flow-drop" cx="339" cy="70" r="5" fill="#2B6777" style="animation-delay:1.4s;"/>
+    </svg>
+  </header>
+
+  <section>
+    <h2>1. Mi jellemzi a helyszínt?</h2>
+
+    <label for="q0">Milyen ingatlanról van szó?</label>
+    <select id="q0">
+      <option value="csaladi">Családi ház</option>
+      <option value="tarsashaz">Társasházi lakás</option>
+      <option value="panel">Panellakás</option>
+    </select>
+
+    <label for="q1">Van zöldfelület a járda vagy útpadka mellett? Milyen szinten van a burkolathoz képest?</label>
+    <select id="q1">
+      <option value="van_magasabban">Magasabban van, mint a burkolat (a víz nem tud magától befolyni)</option>
+      <option value="van_egyforma">Kb. egy szinten van a burkolattal</option>
+      <option value="van_alacsonyabb">Alacsonyabban van, mint a burkolat</option>
+      <option value="nincs">Nincs zöldfelület a közelben</option>
+    </select>
+
+    <label for="q2">Mekkora hely áll rendelkezésre?</label>
+    <select id="q2">
+      <option value="kicsi">Kicsi (egy fa körüli sáv, &lt;1 m)</option>
+      <option value="kozepes">Közepes (1–3 m széles sáv)</option>
+      <option value="nagy">Nagy (parkoló, tér, széles zöldsáv)</option>
+    </select>
+
+    <label for="q3">Hol szeretnéd alkalmazni a megoldást?</label>
+    <select id="q3">
+      <option value="utca">Az utca mentén (járda, útpadka előtt)</option>
+      <option value="parkolo">Parkolóban vagy nagy betonozott téren</option>
+      <option value="udvar">A saját kertemben, udvaromban vagy a tetőn</option>
+    </select>
+
+    <label for="q4">Van már valamilyen csapadékvíz-megoldás a helyszínen?</label>
+    <select id="q4">
+      <option value="nincs">Nincs</option>
+      <option value="van_jo">Van (pl. esővízgyűjtő hordó, ciszterna), és jól működik</option>
+      <option value="van_rossz">Van, de rosszul működik vagy elhanyagolt</option>
+    </select>
+
+    <button id="analyze">Mutasd az ajánlást</button>
+  </section>
+
+  <section id="results-section" class="hidden">
+    <h2>2. Ajánlott megoldások</h2>
+    <div id="results"></div>
+  </section>
+
+  <section id="feedback-section" class="hidden">
+    <h2>3. Mennyire volt hasznos?</h2>
+    <div class="stars" id="stars">
+      <button class="star" data-v="1">★</button>
+      <button class="star" data-v="2">★</button>
+      <button class="star" data-v="3">★</button>
+      <button class="star" data-v="4">★</button>
+      <button class="star" data-v="5">★</button>
+    </div>
+    <label for="comment">Mit hiányoltál, vagy mi zavart?</label>
+    <textarea id="comment" placeholder="Pl. hiányzik a saját utcám kiválasztása egy térképen..."></textarea>
+    <button id="submit-feedback">Visszajelzés küldése</button>
+    <button class="ghost" id="skip-feedback" style="margin-left:8px;">Kihagyom</button>
+    <p class="note">A visszajelzésed a teszt-csoport összes tagja számára látható lesz (név nélkül), hogy együtt lássuk, mi működik.</p>
+  </section>
+
+  <section id="thanks-section" class="hidden">
+    <h2>Köszi a tesztelést!</h2>
+    <p style="font-size:14px;line-height:1.6;">Ez a legfrissebb kép a csoport eddigi visszajelzéseiről:</p>
+    <div class="stat-row">
+      <div class="stat"><span class="num" id="stat-count">–</span><span class="lbl">visszajelzés</span></div>
+      <div class="stat"><span class="num" id="stat-avg">–</span><span class="lbl">átlagos hasznosság / 5</span></div>
+    </div>
+    <div id="comments-list" style="margin-top:1.25rem;"></div>
+  </section>
+
+</div>
+
+<script>
+const solutions = {
+  padka: { tag:"Beavatkozás az úton", cls:"water", zone:"kozut", name:"Padkaáttörés / süllyesztett szegély",
+    desc:"20 cm-enkénti megszakítás az útszegélyen, hogy a csapadékvíz a mélyebben fekvő zöldfelületre folyhasson, ahelyett hogy a csatornába menne." },
+  esokert: { tag:"Növényzet + víz", cls:"moss", zone:"sajat", name:"Esőkert (bioszűrő sáv)",
+    desc:"Enyhén süllyesztett, ellenálló növényekkel telepített sáv, ami megköti és beszivárogtatja a lefolyó vizet, mielőtt elhagyná a telket." },
+  atereszto: { tag:"Burkolat csere", cls:"clay", zone:"sajat", name:"Áteresztő (vízáteresztő) burkolat",
+    desc:"Réselt kő, gyephézagos burkolat vagy áteresztő aszfalt, ami nagy burkolt felületeken engedi a vizet a talajba szivárogni. Ha közterületi parkolóról van szó, ehelyett a kerületi önkormányzattal vagy a közútkezelővel kell egyeztetni." },
+  fagodör: { tag:"Kis helyen is működik", cls:"moss", zone:"kozut", name:"Bővített fagödör oldalbevezetéssel",
+    desc:"A meglévő fagödör bővítése és a szegély megnyitása, hogy szűk helyen is jusson elég csapadékvíz a fa gyökérzónájába." },
+  ciszterna: { tag:"Tárolás", cls:"water", zone:"sajat", name:"Esővízgyűjtő ciszterna",
+    desc:"Nagyobb telken vagy tetőn összegyűjtött csapadékvíz tárolása locsolásra vagy késleltetett elszivárogtatásra." },
+  ciszterna_bovites: { tag:"Meglévő rendszer bővítése", cls:"water", zone:"sajat", name:"Ciszterna bővítése / jobb hasznosítása",
+    desc:"Már van esővízgyűjtőd — érdemes megnövelni a tárolt mennyiséget, vagy olyan helyre is vizet vinni belőle (pl. locsolás, mosás), ami eddig nem volt bekötve." },
+  zoldteto: { tag:"Tetőre", cls:"moss", zone:"sajat", name:"Zöldtető",
+    desc:"Növényzettel borított tetőfelület, ami visszatartja és késlelteti a csapadékvíz lefolyását, miközben hőszigetel is." },
+  karbantartas: { tag:"Első lépés", cls:"clay", zone:"sajat", name:"Meglévő rendszer felülvizsgálata",
+    desc:"A jelenlegi csapadékvíz-megoldásod nem működik jól — mielőtt újabb elemet építenél hozzá, ezt érdemes előbb megjavítani vagy karbantartani." },
+  sulyesztes: { tag:"Nagyobb átalakítás", cls:"water", zone:"kozut", name:"Zöldfelület szintjének süllyesztése",
+    desc:"Ha a zöldsáv jelenleg magasabban van, mint a járda vagy útpadka, a víz nem tud automatikusan befolyni. Egy 10-15 cm-es mélyítés oldja meg, hogy a csapadékvíz begyűljön, mielőtt a csatornába folyna." },
+  evelok: { tag:"Olcsó, gyors kezdés", cls:"moss", zone:"sajat", name:"Szárazságtűrő évelők ültetése",
+    desc:"Levendula, zsálya, kövirózsa, macskamenta és hasonló fajok jól bírják a szárazságot, nem igényelnek sok gondozást, és önmagukban is javítják a talaj vízmegtartását — jó belépő szint, mielőtt nagyobb esőkertbe vágnál." },
+  esohordo: { tag:"Olcsó, gyors kezdés", cls:"water", zone:"sajat", name:"Esőcsatorna végére szerelt esővízgyűjtő hordó",
+    desc:"A tető lefolyócsatornájának végére szerelt hordó a legegyszerűbb és legolcsóbb módja annak, hogy elkezdd összegyűjteni a csapadékvizet locsolásra, mielőtt egy nagyobb beruházásba (ciszterna) vágnál." }
+};
+
+const decisionMaker = {
+  csaladi: "Ezt te magad elindíthatod, nincs szükség külön engedélyre a saját telken (nagyobb átalakításnál érdemes tájékozódni az önkormányzatnál).",
+  tarsashaz: "Közös tulajdonú területet érint: közös képviselői jóváhagyás vagy közgyűlési határozat kell hozzá.",
+  panel: "Ez valószínűleg önkormányzati vagy közösen kezelt terület: jelezd a közös képviselőnek vagy a kerületi önkormányzatnak."
+};
+
+const kozutText = "Ez közterület/közút része — nem magad valósítod meg: közútkezelői hozzájárulás (munkakezdési engedély) szükséges hozzá. Budapesten ezt a Budapest Közút Zrt.-nél vagy a kerületi önkormányzatnál kell kezdeményezni.";
+
+const panelNotes = {
+  zoldteto: "Panelházon lapostetőn technikailag kialakítható, de statikai vizsgálat és közgyűlési határozat kell hozzá — egyénileg nem lehet nekiállni.",
+  ciszterna: "Panelháznál ez csak a közös tetőn vagy a ház körüli közös területen valósítható meg, tehát a lakóközösségen és a közös képviselőn múlik.",
+  ciszterna_bovites: "Panelháznál a meglévő rendszer is közös tulajdon — a bővítést a közös képviselőn keresztül érdemes kezdeményezni.",
+  esokert: "Ha van a panelház körül közös zöldterület, ez ott csak közösségi kezdeményezésként valósítható meg."
+};
+
+function recommend(q0, q1, q2, q3, q4){
+  let picks = [];
+  if (q3 === "parkolo") {
+    picks.push("atereszto");
+    if (q2 === "nagy") picks.push("ciszterna");
+  } else if (q3 === "udvar") {
+    picks.push("zoldteto");
+    if (q2 !== "kicsi") picks.push("ciszterna");
+    if (q1 === "van_alacsonyabb") picks.push("esokert");
+    if (q1 === "van_egyforma" || q1 === "van_magasabban") picks.push("evelok");
+  } else {
+    if (q1 === "van_alacsonyabb") {
+      picks.push("padka");
+      if (q2 !== "kicsi") picks.push("esokert");
+    } else if (q1 === "van_magasabban") {
+      picks.push("sulyesztes");
+      picks.push("evelok");
+    } else if (q1 === "van_egyforma") {
+      picks.push("evelok");
+      if (q2 !== "kicsi") picks.push("esokert");
+    } else if (q2 === "kicsi") {
+      picks.push("fagodör");
+    }
+  }
+  if (picks.length === 0) picks.push("esokert");
+
+  if (q4 === "van_jo") {
+    picks = picks.map(p => p === "ciszterna" ? "ciszterna_bovites" : p);
+  } else if (q4 === "van_rossz") {
+    picks = picks.filter(p => p !== "ciszterna");
+    picks.unshift("karbantartas");
+  }
+
+  if (q0 !== "panel" && q4 === "nincs") {
+    picks.push("esohordo");
+  }
+
+  return [...new Set(picks)];
+}
+
+document.getElementById("analyze").addEventListener("click", () => {
+  const q0 = document.getElementById("q0").value;
+  const q1 = document.getElementById("q1").value;
+  const q2 = document.getElementById("q2").value;
+  const q3 = document.getElementById("q3").value;
+  const q4 = document.getElementById("q4").value;
+  const picks = recommend(q0, q1, q2, q3, q4);
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+  picks.forEach(key => {
+    const s = solutions[key];
+    let whoText = s.zone === "kozut" ? kozutText : decisionMaker[q0];
+    if (q0 === "panel" && panelNotes[key]) {
+      whoText += " " + panelNotes[key];
+    }
+    const card = document.createElement("div");
+    card.className = "card " + s.cls;
+    card.innerHTML = `
+        <span class="tag">${s.tag}</span>
+        <h3>${s.name}</h3>
+        <p>${s.desc}</p>
+        <div class="who">
+          <span class="who-label">Kihez fordulj</span>
+          ${whoText}
+        </div>`;
+    container.appendChild(card);
+  });
+  document.getElementById("results-section").classList.remove("hidden");
+  document.getElementById("feedback-section").classList.remove("hidden");
+  document.getElementById("results-section").scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+let rating = 0;
+document.querySelectorAll(".star").forEach(btn => {
+  btn.addEventListener("click", () => {
+    rating = parseInt(btn.dataset.v);
+    document.querySelectorAll(".star").forEach(s => {
+      s.classList.toggle("active", parseInt(s.dataset.v) <= rating);
+    });
+  });
+});
+
+async function loadStats(){
+  try {
+    const list = await window.storage.list("feedback:", true);
+    if (!list || !list.keys || list.keys.length === 0) {
+      document.getElementById("stat-count").textContent = "0";
+      document.getElementById("stat-avg").textContent = "–";
+      return;
+    }
+    let sum = 0, count = 0;
+    const comments = [];
+    for (const key of list.keys) {
+      try {
+        const entry = await window.storage.get(key, true);
+        if (entry && entry.value) {
+          const data = JSON.parse(entry.value);
+          if (typeof data.rating === "number") { sum += data.rating; count++; }
+          if (data.comment) comments.push(data.comment);
+        }
+      } catch(e) { /* skip broken entry */ }
+    }
+    document.getElementById("stat-count").textContent = count.toString();
+    document.getElementById("stat-avg").textContent = count > 0 ? (sum / count).toFixed(1) : "–";
+    const commentsList = document.getElementById("comments-list");
+    commentsList.innerHTML = "";
+    comments.slice(-5).reverse().forEach(c => {
+      const p = document.createElement("p");
+      p.style.cssText = "font-size:13.5px;line-height:1.6;padding:8px 0;border-bottom:1px solid var(--line);color:rgba(27,46,53,0.8);";
+      p.textContent = "\u201C" + c + "\u201D";
+      commentsList.appendChild(p);
+    });
+  } catch(e) {
+    console.error("Storage error:", e);
+  }
+}
+
+async function finishFeedback(){
+  document.getElementById("feedback-section").classList.add("hidden");
+  document.getElementById("thanks-section").classList.remove("hidden");
+  document.getElementById("thanks-section").scrollIntoView({behavior:"smooth", block:"start"});
+  await loadStats();
+}
+
+document.getElementById("submit-feedback").addEventListener("click", async () => {
+  const comment = document.getElementById("comment").value.trim();
+  const key = "feedback:" + Date.now() + "-" + Math.random().toString(36).slice(2,7);
+  try {
+    await window.storage.set(key, JSON.stringify({ rating: rating || null, comment: comment || null, ts: Date.now() }), true);
+  } catch(e) {
+    console.error("Nem sikerült elmenteni a visszajelzést:", e);
+  }
+  finishFeedback();
+});
+
+document.getElementById("skip-feedback").addEventListener("click", () => {
+  finishFeedback();
+});
+</script>
+</body>
+</html>
