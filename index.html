@@ -169,19 +169,10 @@
 
   <section id="feedback-section" class="hidden">
     <h2>3. Mennyire volt hasznos?</h2>
-    <div class="stars" id="stars">
-      <button class="star" data-v="1">★</button>
-      <button class="star" data-v="2">★</button>
-      <button class="star" data-v="3">★</button>
-      <button class="star" data-v="4">★</button>
-      <button class="star" data-v="5">★</button>
-    </div>
-    <label for="comment">Mit hiányoltál, vagy mi zavart?</label>
-    <textarea id="comment" placeholder="Pl. hiányzik a saját utcám kiválasztása egy térképen..."></textarea>
-    <button id="submit-feedback">Visszajelzés küldése</button>
-    <button class="ghost" id="skip-feedback" style="margin-left:8px;">Kihagyom</button>
-    <p class="note">A visszajelzésed a teszt-csoport összes tagja számára látható lesz (név nélkül), hogy együtt lássuk, mi működik.</p>
-  </section>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSepATgD6_UqYECAxM8G13Cg4sV2YnuY0drlJ8A78YjuX2_04Q/viewform?embedded=true" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Betöltés...</iframe>
+    
+    <button class="ghost" id="skip-feedback" style="margin-top:1rem;">Kihagyom</button>
+</section>
 
   <section id="thanks-section" class="hidden">
     <h2>Köszi a tesztelést!</h2>
@@ -357,7 +348,6 @@ async function finishFeedback(){
   document.getElementById("feedback-section").classList.add("hidden");
   document.getElementById("thanks-section").classList.remove("hidden");
   document.getElementById("thanks-section").scrollIntoView({behavior:"smooth", block:"start"});
-  await loadStats();
 }
 
 document.getElementById("submit-feedback").addEventListener("click", async () => {
