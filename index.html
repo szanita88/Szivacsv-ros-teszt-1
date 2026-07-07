@@ -195,27 +195,27 @@
 <script>
 const solutions = {
   padka: { tag:"Beavatkozás az úton", cls:"water", zone:"kozut", name:"Padkaáttörés / süllyesztett szegély",
-    desc:"20 cm-enkénti megszakítás az útszegélyen, hogy a csapadékvíz a mélyebben fekvő zöldfelületre folyhasson, ahelyett hogy a csatornába menne." },
+    desc:"Megszakítások az útszegélyen, hogy a csapadékvíz a zöldfelületre folyjon a csatorna helyett." },
   esokert: { tag:"Növényzet + víz", cls:"moss", zone:"sajat", name:"Esőkert (bioszűrő sáv)",
-    desc:"Enyhén süllyesztett, ellenálló növényekkel telepített sáv, ami megköti és beszivárogtatja a lefolyó vizet, mielőtt elhagyná a telket." },
+    desc:"Süllyesztett, ellenálló növényes sáv, ami megköti és beszivárogtatja a lefolyó vizet." },
   atereszto: { tag:"Burkolat csere", cls:"clay", zone:"sajat", name:"Áteresztő (vízáteresztő) burkolat",
-    desc:"Réselt kő, gyephézagos burkolat vagy áteresztő aszfalt, ami nagy burkolt felületeken engedi a vizet a talajba szivárogni. Ha közterületi parkolóról van szó, ehelyett a kerületi önkormányzattal vagy a közútkezelővel kell egyeztetni." },
+    desc:"Vízáteresztő burkolat, ami engedi a csapadékot a talajba szivárogni. Közterületnél egyeztetés szükséges az önkormányzattal." },
   fagodör: { tag:"Kis helyen is működik", cls:"moss", zone:"kozut", name:"Bővített fagödör oldalbevezetéssel",
-    desc:"A meglévő fagödör bővítése és a szegély megnyitása, hogy szűk helyen is jusson elég csapadékvíz a fa gyökérzónájába." },
+    desc:"A fagödör bővítése és a szegély megnyitása, hogy a fa gyökere is kapjon csapadékvizet." },
   ciszterna: { tag:"Tárolás", cls:"water", zone:"sajat", name:"Esővízgyűjtő ciszterna",
-    desc:"Nagyobb telken vagy tetőn összegyűjtött csapadékvíz tárolása locsolásra vagy késleltetett elszivárogtatásra." },
+    desc:"Nagyobb mennyiségű csapadékvíz tárolása locsolásra vagy késleltetett elszivárogtatásra." },
   ciszterna_bovites: { tag:"Meglévő rendszer bővítése", cls:"water", zone:"sajat", name:"Ciszterna bővítése / jobb hasznosítása",
-    desc:"Már van esővízgyűjtőd — érdemes megnövelni a tárolt mennyiséget, vagy olyan helyre is vizet vinni belőle (pl. locsolás, mosás), ami eddig nem volt bekötve." },
+    desc:"Növeld a tárolt vizet, vagy vezesd el olyan helyre is (locsolás, mosás), ahova eddig nem jutott." },
   zoldteto: { tag:"Tetőre", cls:"moss", zone:"sajat", name:"Zöldtető",
-    desc:"Növényzettel borított tetőfelület, ami visszatartja és késlelteti a csapadékvíz lefolyását, miközben hőszigetel is." },
+    desc:"Növényzettel borított tető, ami visszatartja a csapadékot és hőszigetel is." },
   karbantartas: { tag:"Első lépés", cls:"clay", zone:"sajat", name:"Meglévő rendszer felülvizsgálata",
-    desc:"A jelenlegi csapadékvíz-megoldásod nem működik jól — mielőtt újabb elemet építenél hozzá, ezt érdemes előbb megjavítani vagy karbantartani." },
+    desc:"Ha a jelenlegi megoldásod nem működik jól, ezt javítsd meg, mielőtt újabb elemet építesz." },
   sulyesztes: { tag:"Nagyobb átalakítás", cls:"water", zone:"kozut", name:"Zöldfelület szintjének süllyesztése",
-    desc:"Ha a zöldsáv jelenleg magasabban van, mint a járda vagy útpadka, a víz nem tud automatikusan befolyni. Egy 10-15 cm-es mélyítés oldja meg, hogy a csapadékvíz begyűljön, mielőtt a csatornába folyna." },
+    desc:"10-15 cm-es mélyítés, hogy a víz automatikusan a zöldsávba folyjon a csatorna helyett." },
   evelok: { tag:"Olcsó, gyors kezdés", cls:"moss", zone:"sajat", name:"Szárazságtűrő évelők ültetése",
-    desc:"Levendula, zsálya, kövirózsa, macskamenta és hasonló fajok jól bírják a szárazságot, nem igényelnek sok gondozást, és önmagukban is javítják a talaj vízmegtartását — jó belépő szint, mielőtt nagyobb esőkertbe vágnál." },
+    desc:"Levendula, zsálya, kövirózsa és társaik jól bírják a szárazságot, és javítják a talaj vízmegtartását." },
   esohordo: { tag:"Olcsó, gyors kezdés", cls:"water", zone:"sajat", name:"Esőcsatorna végére szerelt esővízgyűjtő hordó",
-    desc:"A tető lefolyócsatornájának végére szerelt hordó a legegyszerűbb és legolcsóbb módja annak, hogy elkezdd összegyűjteni a csapadékvizet locsolásra, mielőtt egy nagyobb beruházásba (ciszterna) vágnál." }
+    desc:"A legegyszerűbb, legolcsóbb kezdés: hordó a lefolyócső végén, csapadékvíz locsolásra." }
 };
 
 const decisionMaker = {
